@@ -26,17 +26,22 @@ import {
 import cheerio from 'cheerio';
 import { reptileCommon, rules } from './js/HtmlParseUtil';
 import { fetchHtml } from './js/HttpUtil';
-
+import GBKHttpUtil from './js/GBKHttpUtil';
 class App extends React.Component{
-  
+
   componentDidMount(){
     let r =reptileCommon(rules[3])
     let searchUrl = r.searchUrl("大主宰")
-    fetchHtml("https://www.zwda.com/congdazhuzaikaishidaka/").then((res)=>{
-      // console.warn(res)
+    // GBKHttpUtil.getGBKHtml("https://www.boquge.com/search.htm?keyword=大主宰",(err,res)=>{
+    //   console.log("GBKHttpUtil",res[0].text)
+    // })
+          console.log(searchUrl)
+
+    fetchHtml("https://www.boquge.com/search.htm?keyword=大主宰").then((err,res)=>{
+      console.log("res",res,err)
       // const $ = cheerio.load(res)
       // let result = r.getBookList($,searchUrl,"大主宰")
-      // console.warn(result)
+      // console.log(result)
     })
   }
 

@@ -1,6 +1,7 @@
 /**
  * @author Semper
  */
+import GBKHttpUtil from './GBKHttpUtil';
 
 export function fetchBookmark(url, params) {
 
@@ -19,12 +20,12 @@ export function fetchBookmark(url, params) {
             .catch((error) => {
                 reject(error);
             }).then((responseData) => {
-            if (!responseData) {
-                reject(new Error('fetchBookmark:responseData is null'));
-                return;
-            }
-            resolve(responseData);
-        }).done();
+                if (!responseData) {
+                    reject(new Error('fetchBookmark:responseData is null'));
+                    return;
+                }
+                resolve(responseData);
+            }).done();
     })
 }
 
@@ -43,12 +44,12 @@ export function fetchJSON(url) {
             .catch((error) => {
                 reject(error);
             }).then((responseData) => {
-            if (!responseData) {
-                reject(new Error('fetchJSON:responseData is null'));
-                return;
-            }
-            resolve(responseData);
-        }).done();
+                if (!responseData) {
+                    reject(new Error('fetchJSON:responseData is null'));
+                    return;
+                }
+                resolve(responseData);
+            }).done();
     })
 }
 
@@ -61,38 +62,69 @@ export function fetchNetData(url) {
             .catch((error) => {
                 reject(error);
             }).then((responseData) => {
-            if (!responseData) {
-                reject(new Error('fetchNetData:responseData is null'));
-                return;
+                if (!responseData) {
+                    reject(new Error('fetchNetData:responseData is null'));
+                    return;
+                }
+                resolve(responseData);
+            }).done();
+    })
+}
+
+export function fetchGBKHtml(url) {
+    return new Promise((resolve, reject) => {
+        GBKHttpUtil.getGBKHtml(url, (err, res) => {
+            if(err){
+                console.warn('err fetchGBKHtml:',err)
+                // reject(null);
+                reject(new Error('err fetchGBKHtml:',err));
+            }else{
+                resolve(res[0].text);
             }
-            resolve(responseData);
-        }).done();
+            // console.log("GBKHttpUtil", res[0].text)
+        })
+        
     })
 }
 
 export function fetchHtml(url) {
     return new Promise((resolve, reject) => {
-        fetch(url,{
-            headers: {
-                'Accept':"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                'Content-Type': 'text/html',
-                'Accept-Charset': 'gbk',
-                'User-Agent': 'Mozilla/5.0 (Linux; X11)',
-            }
+        GBKHttpUtil.getGBKHtml(url, (res) => {
+            console.log("GBKHttpUtil", res)
+
+            // if(err){
+            //     console.warn('err fetchGBKHtml:',err)
+            //     // reject(null);
+            //     reject(new Error('err fetchGBKHtml:',err));
+            // }else{
+            //     resolve(res[0].text);
+            // }
         })
+        
+    })
+    // if(unicode==="GBK"){
+    //     return fetchGBKHtml(url)
+    // }else{
+    //     return fetchUtf8Html(url)
+    // }
+}
+
+
+export function fetchUtf8Html(url) {
+    return new Promise((resolve, reject) => {
+        fetch(url)
             .then((response) => {
-                console.warn(response.blob())
                 return response.text()
             })
             .catch((error) => {
                 reject(error);
             }).then((responseData) => {
-            if (!responseData) {
-                reject(new Error('fetchHtml:responseData is null'));
-                return;
-            }
-            resolve(responseData);
-        }).done();
+                if (!responseData) {
+                    reject(new Error('fetchHtml:responseData is null'));
+                    return;
+                }
+                resolve(responseData);
+            }).done();
     })
 }
 
