@@ -48,7 +48,39 @@ RCT_EXPORT_METHOD(initGDTSplashAd:(NSString *)placementId){
   self.placementId = placementId;
 }
 
-RCT_EXPORT_METHOD(getGBKHtml:urlStrig callback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(getGBKHtml1:urlStrig callback:(RCTResponseSenderBlock)callback)
+{
+  NSLog(@"--encode2->%@<------", [@"%E6%88%91" stringByRemovingPercentEncoding]);
+
+    NSLog(@"--decode1-->%@<-----",  [@"我" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]);
+    
+//    NSString *urlStrig = @"https://www.biquge.biz/";
+        urlStrig = [urlStrig stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSURL *url = [NSURL URLWithString:urlStrig];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];//默认为GET
+    NSURLSession *session = [NSURLSession sharedSession];
+
+    NSURLSessionDataTask * dataTask =  [session dataTaskWithRequest:request completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
+
+        //拿到响应头信息
+        NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
+      
+      //GBK编码
+               NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+  //           NSString * encodeStr = [[NSString alloc] initWithBytes:[resultdata bytes] length:[resultdata length] encoding:enc];
+
+        //4.解析拿到的响应数据
+        NSLog(@"show%@%@",[[NSString alloc]initWithData:data encoding:enc],res.allHeaderFields);
+      NSLog(@"unifiedBannerViewFailedToLoad=%@",[error localizedDescription]);
+      NSLog(@"unifiedBannerViewFailedToLoad=%@",[error userInfo]);
+
+    }];
+    [dataTask resume];
+
+
+}
+
+RCT_EXPORT_METHOD(getGBKHtml:urlStrig unicode:(NSString*)unicode callback:(RCTResponseSenderBlock)callback)
 {
 //  BOOL isExist = YES;
 //  NSNumber *boolNumber = [NSNumber numberWithBool:isExist];
@@ -61,7 +93,11 @@ RCT_EXPORT_METHOD(getGBKHtml:urlStrig callback:(RCTResponseSenderBlock)callback)
 //  NSLog(@"--decode1-->%@<-----",  [@"我" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]);
   
 //  NSString *urlStrig = @"https://www.biquge.biz/";
-      urlStrig = [urlStrig stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  if(![unicode isEqual: @"utf-8"]){
+          urlStrig = [urlStrig stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  }
+//      urlStrig = [urlStrig stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  
   NSURL *url = [NSURL URLWithString:urlStrig];
   NSURLRequest *request = [NSURLRequest requestWithURL:url];//默认为GET
   
@@ -94,11 +130,12 @@ RCT_EXPORT_METHOD(getGBKHtml:urlStrig callback:(RCTResponseSenderBlock)callback)
     if(string==nil||[string isEqualToString:@""]||string==NULL){
       NSDictionary *d = @{@"error":@"请求失败：返回值string为空"};
       NSArray *err = @[d];
-      callback(@[err, [NSNull null]]);
+//      NSString *err = @"";
+      callback(@[err]);
     }else{
       NSDictionary *d = @{@"text":string};
       NSArray *events = @[d];
-      callback(@[[NSNull null], events]);
+      callback(@[events]);
     }
   }];
   [dataTask resume];

@@ -23,6 +23,7 @@ public class GBKHttpModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getGBKHtml(
             String url,
+            String unicode,
             Callback successCallback) {
         GBKHttp.getDataGBK(url,successCallback);
     }

@@ -2,6 +2,7 @@
  * @author Semper
  */
 import GBKHttpUtil from './GBKHttpUtil';
+import { Platform } from 'react-native';
 
 export function fetchBookmark(url, params) {
 
@@ -73,33 +74,66 @@ export function fetchNetData(url) {
 
 export function fetchGBKHtml(url) {
     return new Promise((resolve, reject) => {
-        GBKHttpUtil.getGBKHtml(url, (err, res) => {
-            if(err){
-                console.warn('err fetchGBKHtml:',err)
+        GBKHttpUtil.getGBKHtml(url, ( res) => {
+            // console.log("GBKHttpUtil",res[0])
+
+            if(res.length>0&&res[0].error){
+                console.warn('err fetchGBKHtml:',res.error)
                 // reject(null);
-                reject(new Error('err fetchGBKHtml:',err));
+                reject(new Error('err fetchGBKHtml:',res.error));
             }else{
                 resolve(res[0].text);
             }
-            // console.log("GBKHttpUtil", res[0].text)
         })
         
     })
 }
 
-export function fetchHtml(url) {
-    return new Promise((resolve, reject) => {
-        GBKHttpUtil.getGBKHtml(url, (res) => {
-            console.log("GBKHttpUtil", res)
+function handleUrl(url){
+    if(url){
+        let list = url.split(";")
+        console.log("list",list)
+        if(list.length===2){
+            fetchHtml
+        }
+    }
 
-            // if(err){
-            //     console.warn('err fetchGBKHtml:',err)
-            //     // reject(null);
-            //     reject(new Error('err fetchGBKHtml:',err));
-            // }else{
-            //     resolve(res[0].text);
-            // }
-        })
+}
+
+export function fetchHtml(url,unicode="utf-8") {
+    if(url&&url.indexOf(";")!==-1){
+        let list = url.split(";")
+        url = list[0]
+        unicode = list[1]
+    }
+    // console.log("url",url)
+    return new Promise((resolve, reject) => {
+        if(Platform.OS==='ios'){
+            GBKHttpUtil.getGBKHtml(url,unicode, ( res) => {
+                // console.log("GBKHttpUtil",res)
+    
+                if(res.length>0&&res[0].error){
+                    console.warn('err fetchGBKHtml:',res.error)
+                    // reject(null);
+                    reject(new Error('err fetchGBKHtml:',res.error));
+                }else{
+                    resolve(res[0].text);
+                }
+            })
+        }else{
+            GBKHttpUtil.getGBKHtml(url,unicode, (text,errMsc) => {
+                // console.log('GBKHttpUtil',text)
+                if(text){
+                    resolve(text);
+                }else if(errMsc){
+                    console.warn('err fetchGBKHtml:',errMsc)
+                    // reject(null);
+                    reject(new Error('err fetchGBKHtml:',errMsc));
+                }
+                
+            })
+        }
+        
         
     })
     // if(unicode==="GBK"){

@@ -42,10 +42,10 @@ class GBKHttp {
                     if(response.isSuccessful()){
                         if (response.body() != null) {
                             String text = response.body().string();
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("text", text);
+//                            Map<String, String> map = new HashMap<String, String>();
+//                            map.put("text", text);
                             Log.d("GBKHttp--", text);
-                            successCallback.invoke(text);
+                            successCallback.invoke(text,null);
                         }
 
 
@@ -71,7 +71,7 @@ class GBKHttp {
 //                        successCallback.invoke(responseUrl);
                     }
                 }catch (Exception e){
-//                    errorCallback.invoke(e.getMessage());
+                    successCallback.invoke(null,e.getMessage());
                 }
 
             }

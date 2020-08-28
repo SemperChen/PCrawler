@@ -1,8 +1,8 @@
 import { NativeModules } from 'react-native';
 const GBKHttp = NativeModules.GBKHttp;
 class GBKHttpUtil{
-    getGBKHtml(urlStrig,callback){
-        GBKHttp.getGBKHtml(urlStrig,callback)
+    getGBKHtml(urlStrig,unicode,callback){
+        GBKHttp.getGBKHtml(urlStrig,unicode,callback)
     }
 }
 const Instance = new GBKHttpUtil();

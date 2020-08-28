@@ -35,10 +35,10 @@ class App extends React.Component{
     // GBKHttpUtil.getGBKHtml("https://www.boquge.com/search.htm?keyword=大主宰",(err,res)=>{
     //   console.log("GBKHttpUtil",res[0].text)
     // })
-          console.log(searchUrl)
+          // console.log(searchUrl)
 
-    fetchHtml("https://www.boquge.com/search.htm?keyword=大主宰").then((err,res)=>{
-      console.log("res",res,err)
+    fetchHtml("https://www.boquge.com/search.htm?keyword=大主宰;gbk").then((res)=>{
+      console.log("res",res)
       // const $ = cheerio.load(res)
       // let result = r.getBookList($,searchUrl,"大主宰")
       // console.log(result)
